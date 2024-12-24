@@ -1,6 +1,7 @@
 package com.luan.identity_service.service;
 
 
+import com.luan.identity_service.dto.request.UserCreationRequest;
 import com.luan.identity_service.dto.response.UserResponse;
 import com.luan.identity_service.entity.User;
 import com.luan.identity_service.mapper.UserMapper;
@@ -19,5 +20,11 @@ public class UserService {
     public List<UserResponse> getAll(){
         List<User> users = userRepository.findAll();
         return userMapper.toUserResponse(users);
+    }
+    public UserResponse addUser(UserCreationRequest request){
+        User user = userMapper.toUser(request);
+        user.setRoles(null);
+        userRepository.save(user);
+        return userMapper.toUserResponse(user);
     }
 }
