@@ -8,6 +8,9 @@ import com.luan.identity_service.repository.PermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class PermissionService {
     @Autowired
@@ -19,5 +22,16 @@ public class PermissionService {
         permissionRepository.save(permission);
         return permissionMapper.toPermissionResponse(permission);
     }
+    public Permission getByName(String name){
+        return permissionRepository.findByName(name);
+    }
+    public List<PermissionResponse> getAll(){
+        List<Permission> listOrigin = permissionRepository.findAll();
+        List<PermissionResponse> result= new ArrayList<>();
+        for (int i = 0; i < listOrigin.size(); i++) {
+            result.add(permissionMapper.toPermissionResponse(listOrigin.get(i)));
+        }
+        return result;
+     }
 
 }

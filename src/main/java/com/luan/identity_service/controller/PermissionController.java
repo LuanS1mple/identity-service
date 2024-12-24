@@ -5,10 +5,9 @@ import com.luan.identity_service.dto.response.ApiResponse;
 import com.luan.identity_service.dto.response.PermissionResponse;
 import com.luan.identity_service.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/permission")
@@ -22,6 +21,14 @@ public class PermissionController {
                 .code(1001)
                 .message("Add Permission: success")
                 .result(permissionService.add(request))
+                .build();
+    }
+    @GetMapping("/get")
+    ApiResponse<List<PermissionResponse>> get(){
+        return ApiResponse.<List<PermissionResponse>>builder()
+                .code(1004)
+                .message("Show all permission success")
+                .result(permissionService.getAll())
                 .build();
     }
 }
