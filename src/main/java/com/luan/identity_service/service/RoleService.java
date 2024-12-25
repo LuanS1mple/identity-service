@@ -37,4 +37,12 @@ public class RoleService {
                 .permissions(roleRepository.save(role).getPermissions())
                 .build();
     }
+    public List<RoleResponse> getAll(){
+        List<Role> roles = roleRepository.findAll();
+        List<RoleResponse> result = new ArrayList<>();
+        for (int i = 0; i < roles.size(); i++) {
+            result.add(roleMapper.toRoleResponse(roles.get(i)));
+        }
+        return result;
+    }
 }

@@ -5,10 +5,9 @@ import com.luan.identity_service.dto.response.ApiResponse;
 import com.luan.identity_service.dto.response.RoleResponse;
 import com.luan.identity_service.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/role")
@@ -22,6 +21,14 @@ public class RoleController {
                 .code(1003)
                 .message("Add Role success")
                 .result(roleService.get(request))
+                .build();
+    }
+    @GetMapping("/all")
+    ApiResponse<List<RoleResponse>> getAll(){
+        return ApiResponse.<List<RoleResponse>>builder()
+                .code(1005)
+                .result(roleService.getAll())
+                .message("get all role success")
                 .build();
     }
 

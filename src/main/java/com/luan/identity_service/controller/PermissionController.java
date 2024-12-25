@@ -5,6 +5,7 @@ import com.luan.identity_service.dto.response.ApiResponse;
 import com.luan.identity_service.dto.response.PermissionResponse;
 import com.luan.identity_service.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
