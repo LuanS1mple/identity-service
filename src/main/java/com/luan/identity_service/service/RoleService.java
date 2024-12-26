@@ -24,7 +24,7 @@ public class RoleService {
     @Autowired
     RoleRepository roleRepository;
 
-    public RoleResponse get(RoleCreationRequest request){
+    public RoleResponse add(RoleCreationRequest request){
         Role role = roleMapper.toRole(request);
         role.setPermissions(new ArrayList<>());
         for (int i = 0; i < request.getPermissions().size(); i++) {
@@ -42,6 +42,13 @@ public class RoleService {
         List<RoleResponse> result = new ArrayList<>();
         for (int i = 0; i < roles.size(); i++) {
             result.add(roleMapper.toRoleResponse(roles.get(i)));
+        }
+        return result;
+    }
+    public List<Role> getByNames(List<String> roles){
+        List<Role> result= new ArrayList<>();
+        for (int i = 0; i < roles.size(); i++) {
+            result.add(roleRepository.findByName(roles.get(i)));
         }
         return result;
     }

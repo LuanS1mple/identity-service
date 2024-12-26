@@ -20,7 +20,7 @@ public class RoleController {
         return ApiResponse.<RoleResponse>builder()
                 .code(1003)
                 .message("Add Role success")
-                .result(roleService.get(request))
+                .result(roleService.add(request))
                 .build();
     }
     @GetMapping("/all")
@@ -31,5 +31,9 @@ public class RoleController {
                 .message("get all role success")
                 .build();
     }
+//    @PostMapping("/{roleName}")
+//    ApiResponse<Void> addPermission(@PathVariable String roleName, @RequestBody String permission){
+//
+//    }
 
 }
