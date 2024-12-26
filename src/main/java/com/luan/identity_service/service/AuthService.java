@@ -1,17 +1,22 @@
 package com.luan.identity_service.service;
 
 import com.luan.identity_service.dto.request.AuthRequest;
+import com.luan.identity_service.dto.request.IntrospectRequest;
+import com.luan.identity_service.dto.response.IntrospectResponse;
 import com.luan.identity_service.entity.Role;
 import com.luan.identity_service.entity.User;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -25,6 +30,31 @@ public class AuthService {
     protected String signerKey;
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
+
+    public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
+        return new IntrospectResponse().builder()
+                .token(request.getToken())
+                .isValid(isValid(request.getToken()))
+                .build();
+    }
+    public boolean isValid(String token) throws JOSEException, ParseException {
+        JWSVerifier verifier = new MACVerifier(signerKey.getBytes());
+        SignedJWT signedJWT = null;
+        Date expiryTime;
+        boolean isExpiry;
+        try {
+             signedJWT = SignedJWT.parse(token);
+             expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            isExpiry = expiryTime.after(new Date());
+        } catch (ParseException e) {
+            isExpiry=false;
+        }
+
+
+        boolean isCorrectToken = signedJWT.verify(verifier);
+        return isCorrectToken && isExpiry;
+    }
     public boolean isAnUser(AuthRequest request) throws Exception {
         User user = userService.getUserByUsername(request.getUsername());
         return  passwordEncoder.matches(request.getPassword(), user.getPassword());

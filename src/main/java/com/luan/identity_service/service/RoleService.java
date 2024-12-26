@@ -1,5 +1,6 @@
 package com.luan.identity_service.service;
 
+import com.luan.identity_service.dto.request.AddPermissionToRoleRequest;
 import com.luan.identity_service.dto.request.RoleCreationRequest;
 import com.luan.identity_service.dto.response.RoleResponse;
 import com.luan.identity_service.entity.Permission;
@@ -51,5 +52,15 @@ public class RoleService {
             result.add(roleRepository.findByName(roles.get(i)));
         }
         return result;
+    }
+    public RoleResponse addPermissions(String roleName,AddPermissionToRoleRequest request){
+        List<String> permissionNames= request.getPermission();
+        Role role = roleRepository.findByName(roleName);
+        List<Permission> permissions = role.getPermissions();
+        for (int i = 0; i < permissionNames.size(); i++) {
+            permissions.add(permissionService.getByName(permissionNames.get(i)));
+        }
+        roleRepository.save(role);
+        return roleMapper.toRoleResponse(role);
     }
 }

@@ -1,18 +1,23 @@
 package com.luan.identity_service.controller;
 
 import com.luan.identity_service.dto.request.AuthRequest;
+import com.luan.identity_service.dto.request.IntrospectRequest;
 import com.luan.identity_service.dto.response.ApiResponse;
 import com.luan.identity_service.dto.response.AuthResponse;
+import com.luan.identity_service.dto.response.IntrospectResponse;
 import com.luan.identity_service.entity.User;
 import com.luan.identity_service.error.Error;
 import com.luan.identity_service.mapper.UserMapper;
 import com.luan.identity_service.service.AuthService;
 import com.luan.identity_service.service.UserService;
+import com.nimbusds.jose.JOSEException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.text.ParseException;
 
 @RestController
 @RequestMapping("/auth")
@@ -40,5 +45,13 @@ public class AuthController {
                 .build();
         apiResponse.setResult(authResponse);
         return apiResponse;
+    }
+    @PostMapping("/introspect")
+    ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
+        return ApiResponse.<IntrospectResponse>builder()
+                .code(2004)
+                .message("Introspect token")
+                .result(authService.introspect(request))
+                .build();
     }
 }

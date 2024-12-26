@@ -7,6 +7,7 @@ import com.luan.identity_service.dto.response.UserResponse;
 import com.luan.identity_service.entity.Role;
 import com.luan.identity_service.entity.User;
 import com.luan.identity_service.mapper.UserMapper;
+import com.luan.identity_service.repository.UserRepository;
 import com.luan.identity_service.service.RoleService;
 import com.luan.identity_service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class UserController {
 
     @Autowired
     RoleService roleService;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @GetMapping("/all")
@@ -47,6 +50,7 @@ public class UserController {
         for (int i = 0; i < rolesAdd.size(); i++) {
             roles.add(rolesAdd.get(i));
         }
+        userRepository.save(user);
         UserResponse userResponse = userMapper.toUserResponse(user);
         return ApiResponse.<UserResponse>builder()
                 .code(2001)

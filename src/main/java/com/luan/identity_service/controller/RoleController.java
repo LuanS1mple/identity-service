@@ -1,8 +1,10 @@
 package com.luan.identity_service.controller;
 
+import com.luan.identity_service.dto.request.AddPermissionToRoleRequest;
 import com.luan.identity_service.dto.request.RoleCreationRequest;
 import com.luan.identity_service.dto.response.ApiResponse;
 import com.luan.identity_service.dto.response.RoleResponse;
+import com.luan.identity_service.entity.Role;
 import com.luan.identity_service.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +33,14 @@ public class RoleController {
                 .message("get all role success")
                 .build();
     }
-//    @PostMapping("/{roleName}")
-//    ApiResponse<Void> addPermission(@PathVariable String roleName, @RequestBody String permission){
-//
-//    }
+    @PostMapping("/{roleName}")
+    ApiResponse<RoleResponse> addPermission(@PathVariable String roleName, @RequestBody AddPermissionToRoleRequest request){
+        return ApiResponse.<RoleResponse>builder()
+                .code(2002)
+                .message("Update roll success")
+                .result(roleService.addPermissions(roleName,request))
+                .build();
+
+    }
 
 }
