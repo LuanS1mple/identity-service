@@ -11,6 +11,7 @@ import com.luan.identity_service.repository.UserRepository;
 import com.luan.identity_service.service.RoleService;
 import com.luan.identity_service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/all")
     List<UserResponse> getAll(){
         return userService.getAll();
