@@ -2,9 +2,11 @@ package com.luan.identity_service.controller;
 
 import com.luan.identity_service.dto.request.AuthRequest;
 import com.luan.identity_service.dto.request.IntrospectRequest;
+import com.luan.identity_service.dto.request.RefreshTokenRequest;
 import com.luan.identity_service.dto.response.ApiResponse;
 import com.luan.identity_service.dto.response.AuthResponse;
 import com.luan.identity_service.dto.response.IntrospectResponse;
+import com.luan.identity_service.dto.response.RefreshTokenResponse;
 import com.luan.identity_service.entity.User;
 import com.luan.identity_service.error.Error;
 import com.luan.identity_service.mapper.UserMapper;
@@ -52,6 +54,21 @@ public class AuthController {
                 .code(2004)
                 .message("Introspect token")
                 .result(authService.introspect(request))
+                .build();
+    }
+    @PostMapping("/refresh")
+    ApiResponse<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenRequest request) throws Exception {
+        if(authService.isAbleToRefresh(request)){
+            return new ApiResponse().<RefreshTokenResponse>builder()
+                    .message("Generate new token success")
+                    .code(2004)
+                    .result(authService.refreshToken(request))
+                    .build();
+        }
+        return new ApiResponse().<RefreshTokenResponse>builder()
+                .code(2006)
+                .message("Cannot refresh new token")
+                .result(null)
                 .build();
     }
 }

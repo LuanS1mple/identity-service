@@ -43,6 +43,7 @@ public class UserController {
                 .result(userResponse)
                 .build();
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{username}")
     ApiResponse<UserResponse> addRoleToUser(@PathVariable String username, @RequestBody AddRoleToUserRequest request) throws Exception {
         User user = userService.getUserByUsername(username);

@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final String[] PUBLIC_POST_ENDPOINTS = {"permission/get","auth/token"};
+    private final String[] PUBLIC_POST_ENDPOINTS = {"permission/get","auth/token","auth/refresh"};
     private final String[] PUBLIC_GET_ENDPOINTS = {"xx"};
 
 

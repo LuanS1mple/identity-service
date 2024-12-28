@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,18 +27,26 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    RoleService roleService;
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    public List<UserResponse> getAll(){
+
+    public List<UserResponse> getAll() {
         List<User> users = userRepository.findAll();
         return userMapper.toUserResponse(users);
     }
-    public UserResponse addUser(UserCreationRequest request){
+
+    public UserResponse addUser(UserCreationRequest request) {
         User user = userMapper.toUser(request);
-        user.setRoles(null);
+        List<String> defaultRole = new ArrayList<>();
+        defaultRole.add("USER");
+        user.setRoles(roleService.getByNames(defaultRole));
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
         return userMapper.toUserResponse(user);
     }
+
     public User getUserByUsername(String username) throws Exception {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new Exception("Not found username"));
         return user;

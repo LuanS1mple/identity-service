@@ -7,6 +7,7 @@ import com.luan.identity_service.dto.response.RoleResponse;
 import com.luan.identity_service.entity.Role;
 import com.luan.identity_service.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class RoleController {
     @Autowired
     RoleService roleService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/add")
     ApiResponse<RoleResponse> add(@RequestBody RoleCreationRequest request){
         return ApiResponse.<RoleResponse>builder()
@@ -25,6 +27,7 @@ public class RoleController {
                 .result(roleService.add(request))
                 .build();
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/all")
     ApiResponse<List<RoleResponse>> getAll(){
         return ApiResponse.<List<RoleResponse>>builder()
@@ -33,6 +36,7 @@ public class RoleController {
                 .message("get all role success")
                 .build();
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{roleName}")
     ApiResponse<RoleResponse> addPermission(@PathVariable String roleName, @RequestBody AddPermissionToRoleRequest request){
         return ApiResponse.<RoleResponse>builder()
