@@ -1,6 +1,7 @@
 package com.luan.identity_service.service;
 
 
+import com.luan.identity_service.dto.request.UpdateUserRequest;
 import com.luan.identity_service.dto.request.UserCreationRequest;
 import com.luan.identity_service.dto.response.UserResponse;
 import com.luan.identity_service.entity.User;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -51,4 +54,18 @@ public class UserService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new Exception("Not found username"));
         return user;
     }
+    public UserResponse updateUser(UpdateUserRequest request) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = getUserByUsername(username);
+        userMapper.updateUser(user,request);
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
+    public void deleteUser(String username) throws Exception {
+        User user  = getUserByUsername(username);
+        userRepository.delete(user);
+    }
+
 }
